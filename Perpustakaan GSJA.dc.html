@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#E8E6E0;font-family:'Inter',ui-sans-serif,system-ui,sans-serif;color:#20242F;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+a{color:#414D8B}a:hover{color:#333D6E}
+input::placeholder,textarea::placeholder{color:#A2A7B3}
+::-webkit-scrollbar{width:0;height:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:none;opacity:1}}
+@keyframes rise{from{transform:translateY(56px);opacity:0}to{transform:none;opacity:1}}
+@keyframes slidein{from{transform:translateX(26px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 24px">
+
+<sc-if value="{{ isMobile }}" hint-placeholder-val="{{ true }}">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div data-screen-label="Aplikasi mobile" style="position:relative;height:100%;background:#F7F6F2;display:flex;flex-direction:column;font-family:'Inter',ui-sans-serif,system-ui,sans-serif;color:#20242F;font-size:14.5px;line-height:1.5;letter-spacing:-0.005em">
+
+  <div style="flex:0 0 auto;padding:66px 20px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+    <div style="display:flex;align-items:center;gap:11px;min-width:0">
+      <img src="uploads/gsja-library/logo-GSJA-png.png" alt="Logo GSJA" style="height:34px;width:auto;object-fit:contain;display:block" />
+      <div style="display:flex;flex-direction:column;line-height:1;min-width:0">
+        <span style="font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#414D8B;font-weight:700;margin-bottom:4px">Perpustakaan</span>
+        <span style="font-size:17px;font-weight:700;letter-spacing:-0.01em;white-space:nowrap">GSJA Betlehem Bogor</span>
+      </div>
+    </div>
+    <button onClick="{{ goProfil }}" aria-label="Profil saya" style="width:36px;height:36px;border-radius:50%;background:#414D8B;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;flex:0 0 auto">{{ avatarInitial }}</button>
+  </div>
+
+  <div ref="{{ contentRef }}" style="flex:1 1 auto;overflow-y:auto;overflow-x:hidden;padding:2px 20px 110px">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <section data-screen-label="Beranda" style="animation:fade .22s ease">
+      <p style="font-size:14.5px;color:#6C7180;margin:4px 0 2px">Halo, <b style="color:#20242F;font-weight:700">{{ firstName }}</b> — mau baca apa hari ini?</p>
+      <div style="margin:14px 0 18px;background:linear-gradient(150deg,#4A569B,#333D6E);color:#FFFFFF;border-radius:20px;padding:19px 19px 17px;box-shadow:0 12px 26px rgba(51,61,110,0.24)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px">
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.75;font-weight:600">Buku sedang dipinjam</div>
+            <div style="font-size:31px;font-weight:800;margin:5px 0 3px;letter-spacing:-0.02em;line-height:1.05;font-variant-numeric:tabular-nums">{{ activeCount }}<span style="opacity:0.55;font-size:22px;font-weight:600"> / {{ limitNum }}</span></div>
+            <div style="font-size:12px;opacity:0.72">{{ limitSub }}</div>
+          </div>
+          <button onClick="{{ goLoans }}" style="background:rgba(255,255,255,0.15);color:#fff;border:none;font-size:12.5px;font-weight:600;padding:10px 14px;border-radius:11px;cursor:pointer;white-space:nowrap">Pinjaman saya</button>
+        </div>
+        <sc-if value="{{ hasOverdue }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:14px;background:rgba(255,255,255,0.14);border-radius:12px;padding:10px 12px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:8px">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="flex:0 0 auto"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>
+          <span>{{ overdueText }}</span>
+        </div>
+        </sc-if>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:14px;padding:12px 14px;margin-bottom:18px">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6C7180" stroke-width="2.2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path></svg>
+        <input value="{{ homeQ }}" onChange="{{ onHomeQ }}" placeholder="Cari judul atau penulis" aria-label="Cari judul atau penulis" style="border:none;outline:none;font-size:14px;color:#20242F;width:100%;background:transparent" />
+      </div>
+
+      <sc-if value="{{ hasLate }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin:2px 0 12px"><h2 style="font-size:16px;font-weight:700;margin:0;letter-spacing:-0.01em">Perlu perhatian</h2></div>
+        <sc-for list="{{ lateLoans }}" as="ll" hint-placeholder-count="1">
+          <div style="background:#FCF1EF;border:1px solid #F2DAD5;border-radius:16px;padding:12px;margin-bottom:12px">
+            <div style="display:flex;gap:13px;align-items:center;margin-bottom:12px">
+              <div style="{{ ll.coverStyle }}">{{ ll.title }}</div>
+              <div style="flex:1 1 auto;min-width:0">
+                <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ll.title }}</div>
+                <div style="font-size:12.5px;color:#6C7180;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ll.author }}</div>
+                <div style="font-size:12px;font-weight:600;margin-top:5px;color:#B8433A">{{ ll.lateText }}</div>
+              </div>
+              <span style="{{ ll.pillStyle }}">Telat</span>
+            </div>
+            <button onClick="{{ ll.ret }}" style="{{ ll.returnStyle }}">Kembalikan sekarang</button>
+          </div>
+        </sc-for>
+        <div style="height:8px"></div>
+      </sc-if>
+
+      <sc-if value="{{ hasNew }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin:2px 0 12px"><h2 style="font-size:16px;font-weight:700;margin:0;letter-spacing:-0.01em">Baru masuk</h2></div>
+        <div style="display:flex;gap:12px;overflow-x:auto;margin:0 -20px 22px;padding:2px 20px 8px">
+          <sc-for list="{{ newBooks }}" as="nb" hint-placeholder-count="2">
+            <button onClick="{{ nb.open }}" style="flex:0 0 auto;width:118px;background:none;border:none;text-align:left;cursor:pointer;padding:0">
+              <div style="{{ nb.coverStyle }}"><sc-if value="{{ nb.hasTag }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:7px;left:7px;font-size:8.5px;font-weight:700;letter-spacing:0.06em;padding:3px 6px;border-radius:6px;background:rgba(0,0,0,0.3);color:#fff">{{ nb.tag }}</span></sc-if>{{ nb.title }}</div>
+              <div style="font-size:12.5px;font-weight:600;margin:8px 0 1px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#20242F">{{ nb.title }}</div>
+              <div style="font-size:11px;color:#6C7180;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ nb.author }}</div>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin:2px 0 12px"><h2 style="font-size:16px;font-weight:700;margin:0;letter-spacing:-0.01em">Sering dipinjam</h2></div>
+      <div style="display:flex;gap:12px;overflow-x:auto;margin:0 -20px 22px;padding:2px 20px 8px">
+        <sc-for list="{{ popularBooks }}" as="pb" hint-placeholder-count="3">
+          <button onClick="{{ pb.open }}" style="flex:0 0 auto;width:118px;background:none;border:none;text-align:left;cursor:pointer;padding:0">
+            <div style="{{ pb.coverStyle }}">{{ pb.title }}</div>
+            <div style="font-size:12.5px;font-weight:600;margin:8px 0 1px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#20242F">{{ pb.title }}</div>
+            <div style="font-size:11px;color:#6C7180;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ pb.author }}</div>
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin:2px 0 12px">
+        <h2 style="font-size:16px;font-weight:700;margin:0;letter-spacing:-0.01em">Tersedia untuk dipinjam</h2>
+        <span style="font-size:12.5px;color:#6C7180;font-weight:500">{{ homeCntText }}</span>
+      </div>
+      <sc-for list="{{ homeBooks }}" as="bk" hint-placeholder-count="3">
+        <button onClick="{{ bk.open }}" style="width:100%;display:flex;align-items:center;gap:13px;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;padding:11px;margin-bottom:10px;text-align:left;cursor:pointer" style-active="transform:scale(0.985)">
+          <div style="{{ bk.coverStyle }}">{{ bk.title }}</div>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;color:#20242F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ bk.title }}</div>
+            <div style="font-size:12.5px;color:#6C7180;margin:2px 0 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ bk.author }}</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="{{ bk.availStyle }}"><span style="{{ bk.dotStyle }}"></span>{{ bk.availText }}</span>
+              <span style="font-size:11.5px;font-weight:600;color:#A0761E">★ {{ bk.rating }}</span>
+            </div>
+          </div>
+          <div style="flex:0 0 auto;color:#B9BEC9;font-size:20px;padding-right:2px">›</div>
+        </button>
+      </sc-for>
+      <sc-if value="{{ homeEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:36px 20px;color:#6C7180"><h3 style="margin:0 0 5px;color:#20242F;font-size:15px;font-weight:700">Tidak ketemu</h3><p style="margin:0;font-size:13px">Coba kata kunci lain.</p></div>
+      </sc-if>
+    </section>
+    </sc-if>
+
+    <sc-if value="{{ isKatalog }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Katalog" style="animation:fade .22s ease">
+      <div style="margin:8px 0 14px"><h2 style="font-size:19px;font-weight:700;margin:0;letter-spacing:-0.015em">Katalog buku</h2></div>
+      <div style="display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:14px;padding:12px 14px;margin-bottom:14px">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6C7180" stroke-width="2.2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path></svg>
+        <input value="{{ catQ }}" onChange="{{ onCatQ }}" placeholder="Cari judul atau penulis" aria-label="Cari judul atau penulis" style="border:none;outline:none;font-size:14px;color:#20242F;width:100%;background:transparent" />
+      </div>
+      <div style="display:flex;gap:8px;overflow-x:auto;margin:0 -20px 12px;padding:0 20px 4px">
+        <sc-for list="{{ chips }}" as="ch" hint-placeholder-count="4">
+          <button onClick="{{ ch.click }}" style="{{ ch.style }}">{{ ch.label }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+        <div style="display:flex;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:11px;padding:3px;gap:2px">
+          <sc-for list="{{ sorts }}" as="so" hint-placeholder-count="4">
+            <button onClick="{{ so.click }}" style="{{ so.style }}">{{ so.label }}</button>
+          </sc-for>
+        </div>
+        <button onClick="{{ toggleAvail }}" style="margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#6C7180;cursor:pointer;background:none;border:none;padding:0"><span>Tersedia</span><span style="{{ availTrack }}"><span style="{{ availThumb }}"></span></span></button>
+      </div>
+      <sc-for list="{{ catBooks }}" as="cb" hint-placeholder-count="4">
+        <button onClick="{{ cb.open }}" style="width:100%;display:flex;align-items:center;gap:13px;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;padding:11px;margin-bottom:10px;text-align:left;cursor:pointer" style-active="transform:scale(0.985)">
+          <div style="{{ cb.coverStyle }}">{{ cb.title }}</div>
+          <div style="flex:1 1 auto;min-width:0">
+            <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;color:#20242F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cb.title }}</div>
+            <div style="font-size:12.5px;color:#6C7180;margin:2px 0 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cb.author }}</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <span style="{{ cb.availStyle }}"><span style="{{ cb.dotStyle }}"></span>{{ cb.availText }}</span>
+              <span style="font-size:11.5px;font-weight:600;color:#A0761E">★ {{ cb.rating }}</span>
+            </div>
+          </div>
+          <div style="flex:0 0 auto;color:#B9BEC9;font-size:20px;padding-right:2px">›</div>
+        </button>
+      </sc-for>
+      <sc-if value="{{ catEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:36px 20px;color:#6C7180"><h3 style="margin:0 0 5px;color:#20242F;font-size:15px;font-weight:700">Kosong</h3><p style="margin:0;font-size:13px">Tidak ada buku yang cocok dengan filter.</p></div>
+      </sc-if>
+    </section>
+    </sc-if>
+
+    <sc-if value="{{ isLoans }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Pinjaman" style="animation:fade .22s ease">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;margin:8px 0 14px">
+        <h2 style="font-size:19px;font-weight:700;margin:0;letter-spacing:-0.015em">Pinjaman saya</h2>
+        <span style="font-size:12.5px;color:#6C7180;font-weight:500">{{ loansCntText }}</span>
+      </div>
+      <sc-if value="{{ loansEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="text-align:center;padding:38px 20px;color:#6C7180">
+          <div style="width:52px;height:52px;border-radius:14px;background:#EDEFF7;color:#414D8B;display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"></path></svg></div>
+          <h3 style="margin:0 0 5px;color:#20242F;font-size:15px;font-weight:700">Belum ada pinjaman</h3><p style="margin:0;font-size:13px">Cari buku dan pinjam untuk mulai membaca.</p>
+        </div>
+      </sc-if>
+      <sc-for list="{{ activeLoanCards }}" as="ln" hint-placeholder-count="2">
+        <div style="{{ ln.cardStyle }}">
+          <div style="display:flex;gap:13px;align-items:center;margin-bottom:12px">
+            <div style="{{ ln.coverStyle }}">{{ ln.title }}</div>
+            <div style="flex:1 1 auto;min-width:0">
+              <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ln.title }}</div>
+              <div style="font-size:12.5px;color:#6C7180;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ln.author }}</div>
+              <div style="{{ ln.dueStyle }}">{{ ln.dueText }}</div>
+            </div>
+            <span style="{{ ln.pillStyle }}">{{ ln.pillText }}</span>
+          </div>
+          <div style="display:flex;gap:9px">
+            <button disabled="{{ ln.renewDisabled }}" onClick="{{ ln.renew }}" style="{{ ln.renewStyle }}">{{ ln.renewText }}</button>
+            <button onClick="{{ ln.ret }}" style="{{ ln.returnStyle }}">Kembalikan</button>
+          </div>
+        </div>
+      </sc-for>
+      <sc-if value="{{ hasQueue }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:#6C7180;font-weight:700;margin:20px 0 12px">Antrean saya</div>
+        <sc-for list="{{ queueCards }}" as="qc" hint-placeholder-count="1">
+          <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;padding:12px;margin-bottom:12px">
+            <div style="display:flex;gap:13px;align-items:center;margin-bottom:12px">
+              <div style="{{ qc.coverStyle }}">{{ qc.title }}</div>
+              <div style="flex:1 1 auto;min-width:0">
+                <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ qc.title }}</div>
+                <div style="font-size:12.5px;color:#6C7180;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ qc.author }}</div>
+                <div style="font-size:12px;font-weight:600;margin-top:5px;color:#A0761E">Menunggu tersedia · antrean #1</div>
+              </div>
+              <span style="{{ qc.pillStyle }}">Antre</span>
+            </div>
+            <button onClick="{{ qc.cancel }}" style="{{ qc.cancelStyle }}">Batalkan antrean</button>
+          </div>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{ hasHistory }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:#6C7180;font-weight:700;margin:20px 0 12px">Riwayat</div>
+        <sc-for list="{{ historyCards }}" as="hc" hint-placeholder-count="1">
+          <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;padding:12px;margin-bottom:12px;opacity:0.92">
+            <div style="display:flex;gap:13px;align-items:center">
+              <div style="{{ hc.coverStyle }}">{{ hc.title }}</div>
+              <div style="flex:1 1 auto;min-width:0">
+                <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ hc.title }}</div>
+                <div style="font-size:12.5px;color:#6C7180;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ hc.retText }}</div>
+              </div>
+              <span style="{{ hc.pillStyle }}">Selesai</span>
+            </div>
+          </div>
+        </sc-for>
+      </sc-if>
+    </section>
+    </sc-if>
+
+    <sc-if value="{{ isProfil }}" hint-placeholder-val="{{ false }}">
+    <section data-screen-label="Profil" style="animation:fade .22s ease">
+      <div style="margin:8px 0 14px"><h2 style="font-size:19px;font-weight:700;margin:0;letter-spacing:-0.015em">Profil</h2></div>
+      <div style="background:linear-gradient(150deg,#4A569B,#333D6E);color:#fff;border-radius:20px;padding:20px;display:flex;align-items:center;gap:14px;margin:0 0 16px;box-shadow:0 12px 26px rgba(51,61,110,0.24)">
+        <div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;flex:0 0 auto">{{ avatarInitial }}</div>
+        <div><div style="font-size:17.5px;font-weight:700;letter-spacing:-0.01em">{{ memberName }}</div><div style="font-size:12.5px;opacity:0.8;margin-top:3px">Anggota GSJA Betlehem Bogor · sejak 2023</div></div>
+      </div>
+      <div style="display:flex;gap:11px;margin-bottom:18px">
+        <div style="flex:1;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:15px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800;color:#414D8B;letter-spacing:-0.01em;font-variant-numeric:tabular-nums">{{ readingCount }}</div><div style="font-size:11px;color:#6C7180;font-weight:600;margin-top:2px">Dibaca</div></div>
+        <div style="flex:1;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:15px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800;color:#414D8B;letter-spacing:-0.01em;font-variant-numeric:tabular-nums">{{ doneCount }}</div><div style="font-size:11px;color:#6C7180;font-weight:600;margin-top:2px">Selesai</div></div>
+        <div style="flex:1;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:15px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800;color:#414D8B;letter-spacing:-0.01em;font-variant-numeric:tabular-nums">{{ queueCount }}</div><div style="font-size:11px;color:#6C7180;font-weight:600;margin-top:2px">Antre</div></div>
+      </div>
+      <div style="font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:#6C7180;font-weight:700;margin:6px 0 12px">Aktivitas</div>
+      <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;overflow:hidden;margin-bottom:18px">
+        <button onClick="{{ goLoans }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;border-bottom:1px solid #E9E7E0;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F">
+          <span style="color:#414D8B;display:flex;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"></path></svg></span>
+          <span style="flex:1 1 auto">Pinjaman &amp; riwayat</span><span style="color:#B9BEC9;font-size:19px">›</span>
+        </button>
+        <button onClick="{{ openSuggest }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F">
+          <span style="color:#414D8B;display:flex;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></span>
+          <span style="flex:1 1 auto">Usulkan buku baru</span><span style="color:#B9BEC9;font-size:19px">›</span>
+        </button>
+      </div>
+      <div style="font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:#6C7180;font-weight:700;margin:0 0 12px">Notifikasi</div>
+      <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;overflow:hidden;margin-bottom:18px">
+        <button onClick="{{ toggleNotifDue }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:none;border-bottom:1px solid #E9E7E0;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F">
+          <span style="color:#414D8B;display:flex;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.7 21a2 2 0 0 1-3.4 0"></path></svg></span>
+          <span style="flex:1 1 auto">Pengingat jatuh tempo</span><span style="{{ swDueTrack }}"><span style="{{ swDueThumb }}"></span></span>
+        </button>
+        <button onClick="{{ toggleNotifAvail }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:none;border-bottom:1px solid #E9E7E0;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F">
+          <span style="color:#414D8B;display:flex;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v12H5.2L4 17.2z"></path></svg></span>
+          <span style="flex:1 1 auto">Buku pesanan tersedia</span><span style="{{ swAvailTrack }}"><span style="{{ swAvailThumb }}"></span></span>
+        </button>
+        <button onClick="{{ toggleNotifBaru }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:none;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F">
+          <span style="color:#414D8B;display:flex;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 5h18M3 12h18M3 19h18"></path></svg></span>
+          <span style="flex:1 1 auto">Buku baru masuk koleksi</span><span style="{{ swBaruTrack }}"><span style="{{ swBaruThumb }}"></span></span>
+        </button>
+      </div>
+      <div style="font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:#6C7180;font-weight:700;margin:0 0 12px">Lainnya</div>
+      <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;overflow:hidden;margin-bottom:18px">
+        <button onClick="{{ onContact }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;border-bottom:1px solid #E9E7E0;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F">
+          <span style="color:#414D8B;display:flex;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></span>
+          <span style="flex:1 1 auto">Bantuan &amp; kontak petugas</span><span style="color:#B9BEC9;font-size:19px">›</span>
+        </button>
+        <button onClick="{{ onHours }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F">
+          <span style="color:#414D8B;display:flex;flex:0 0 auto"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></span>
+          <span style="flex:1 1 auto">Jam &amp; lokasi perpustakaan</span><span style="color:#B9BEC9;font-size:19px">›</span>
+        </button>
+      </div>
+      <p style="font-size:11px;color:#9AA0AC;text-align:center;margin:8px 0 10px">Perpustakaan GSJA · Prototipe v3</p>
+    </section>
+    </sc-if>
+  </div>
+
+  <nav style="position:absolute;left:0;right:0;bottom:0;height:86px;background:rgba(255,255,255,0.93);backdrop-filter:blur(10px);border-top:1px solid #E9E7E0;display:flex;padding:9px 6px 26px;z-index:20">
+    <button onClick="{{ goHome }}" style="{{ tabHomeStyle }}"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></svg>Beranda</button>
+    <button onClick="{{ goKatalog }}" style="{{ tabKatalogStyle }}"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="13" y="4" width="8" height="16" rx="1.5"></rect></svg>Katalog</button>
+    <button onClick="{{ goLoans }}" style="{{ tabLoansStyle }}"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"></path></svg>Pinjaman<sc-if value="{{ showLoanBadge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:2px;right:calc(50% - 22px);min-width:16px;height:16px;padding:0 4px;border-radius:8px;background:#B8433A;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ overdueCount }}</span></sc-if></button>
+    <button onClick="{{ goProfil }}" style="{{ tabProfilStyle }}"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>Profil</button>
+  </nav>
+
+  <sc-if value="{{ detailOpen }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Detail buku" style="position:absolute;inset:0;background:#F7F6F2;z-index:30;display:flex;flex-direction:column;animation:slidein .26s cubic-bezier(.2,.7,.2,1)">
+    <div style="flex:0 0 auto;padding:62px 16px 8px;display:flex;align-items:center;gap:8px">
+      <button onClick="{{ closeDetail }}" aria-label="Kembali" style="width:38px;height:38px;border-radius:12px;border:1px solid #E9E7E0;background:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#20242F"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 5l-7 7 7 7"></path></svg></button>
+      <span style="font-size:15px;font-weight:600">Detail buku</span>
+    </div>
+    <div style="flex:1 1 auto;overflow-y:auto;padding:8px 22px 20px">
+      <div style="display:flex;flex-direction:column;align-items:center;text-align:center;padding:12px 0 6px">
+        <div style="{{ dCoverStyle }}">{{ dTitle }}</div>
+        <h1 style="font-size:21px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin:16px 0 5px">{{ dTitle }}</h1>
+        <p style="font-size:14px;color:#6C7180;margin:0 0 10px">{{ dAuthor }}</p>
+        <div style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#A0761E;margin-bottom:13px"><span style="letter-spacing:0.1em">{{ dStars }}</span><span>{{ dRating }}</span><span style="color:#6C7180;font-weight:500">{{ dRatings }}</span></div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+          <sc-for list="{{ dBadges }}" as="bd" hint-placeholder-count="2"><span style="{{ bd.style }}">{{ bd.text }}</span></sc-for>
+        </div>
+      </div>
+      <div style="height:1px;background:#E9E7E0;margin:20px 0"></div>
+      <h4 style="font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:#6C7180;margin:0 0 8px;font-weight:700">Tentang buku</h4>
+      <p style="margin:0 0 16px;font-size:14.5px;line-height:1.65;color:#39404E;text-wrap:pretty">{{ dDesc }}</p>
+      <sc-for list="{{ dKv }}" as="kv" hint-placeholder-count="5">
+        <div style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:9px 0;border-bottom:1px solid #EEECE6"><span style="color:#6C7180;flex:0 0 auto">{{ kv.k }}</span><span style="font-weight:600;text-align:right">{{ kv.v }}</span></div>
+      </sc-for>
+      <div style="height:8px"></div>
+    </div>
+    <div style="flex:0 0 auto;padding:12px 22px 34px;background:#F7F6F2;border-top:1px solid #E9E7E0">
+      <button disabled="{{ dCtaDisabled }}" onClick="{{ dCtaClick }}" style="{{ dCtaStyle }}">{{ dCtaText }}</button>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ successOpen }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Sukses" style="position:absolute;inset:0;background:#F7F6F2;z-index:45;display:flex;flex-direction:column;animation:slidein .26s cubic-bezier(.2,.7,.2,1)">
+    <div style="flex:1 1 auto;display:flex;flex-direction:column;align-items:center;text-align:center;padding:96px 30px 10px;overflow-y:auto">
+      <div style="{{ sIconStyle }}"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg></div>
+      <h2 style="font-size:22px;font-weight:700;margin:0 0 6px;letter-spacing:-0.02em;line-height:1.25">{{ sTitle }}</h2>
+      <p style="font-size:13.5px;color:#6C7180;margin:0 0 20px;line-height:1.55;text-wrap:pretty">{{ sSub }}</p>
+      <div style="width:100%;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:18px;padding:18px;text-align:left;box-shadow:0 12px 26px rgba(32,36,47,0.07)">
+        <sc-if value="{{ sHasCode }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:10.5px;letter-spacing:0.11em;text-transform:uppercase;color:#6C7180;font-weight:700;text-align:center;margin-bottom:6px">{{ sCodeLabel }}</div>
+          <div style="font-size:28px;font-weight:800;letter-spacing:0.22em;text-align:center;color:#20242F;padding-left:0.22em;margin-bottom:14px;font-variant-numeric:tabular-nums">{{ sCodeSpaced }}</div>
+          <div style="background:#fff;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px 8px">{{ sBarcode }}<div style="text-align:center;font-size:12.5px;font-weight:600;letter-spacing:0.3em;color:#6C7180;margin-top:8px;padding-left:0.3em;font-variant-numeric:tabular-nums">{{ sCodeSpaced }}</div></div>
+          <div style="border-top:1.5px dashed #E4E2DB;margin:16px -18px 0;padding:16px 18px 0"></div>
+        </sc-if>
+        <div style="font-size:15.5px;font-weight:700;margin-bottom:2px;letter-spacing:-0.01em">{{ sBookTitle }}</div>
+        <div style="font-size:13px;color:#6C7180;margin-bottom:10px">{{ sBookAuthor }}</div>
+        <sc-for list="{{ sKv }}" as="kv" hint-placeholder-count="2">
+          <div style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:6px 0"><span style="color:#6C7180;flex:0 0 auto">{{ kv.k }}</span><span style="font-weight:600;text-align:right">{{ kv.v }}</span></div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ sHasHint }}" hint-placeholder-val="{{ false }}"><p style="font-size:12.5px;color:#6C7180;line-height:1.55;margin:14px 0 0">{{ sHint }}</p></sc-if>
+    </div>
+    <div style="flex:0 0 auto;padding:14px 30px 38px;background:#F7F6F2;border-top:1px solid #E9E7E0">
+      <button onClick="{{ sPrimaryClick }}" style="{{ sPrimaryStyle }}">{{ sPrimaryText }}</button>
+      <sc-if value="{{ sHasSecondary }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sSecondaryClick }}" style="{{ sSecondaryStyle }}">Kembali ke beranda</button></sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ anySheet }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(21,25,37,0.42);z-index:50"></div>
+  </sc-if>
+
+  <sc-if value="{{ sheetConfirm }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Konfirmasi pinjam" style="position:absolute;left:0;right:0;bottom:0;z-index:51;background:#FFFFFF;border-radius:26px 26px 0 0;padding:10px 22px 40px;animation:rise .3s cubic-bezier(.2,.8,.2,1)">
+    <div style="width:40px;height:5px;border-radius:3px;background:#DDDBD4;margin:0 auto 16px"></div>
+    <h3 style="margin:0 0 3px;font-size:18px;font-weight:700;letter-spacing:-0.01em">Konfirmasi peminjaman</h3>
+    <p style="font-size:13px;color:#6C7180;margin:0 0 16px">{{ cSub }}</p>
+    <div style="background:#F7F6F2;border:1px solid #E9E7E0;border-radius:14px;padding:5px 14px;margin-bottom:16px">
+      <sc-for list="{{ cKv }}" as="kv" hint-placeholder-count="3">
+        <div style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:8px 0"><span style="color:#6C7180;flex:0 0 auto">{{ kv.k }}</span><span style="font-weight:600;text-align:right">{{ kv.v }}</span></div>
+      </sc-for>
+    </div>
+    <button onClick="{{ doBorrow }}" style="{{ btnPrimary }}">Konfirmasi pinjam</button>
+    <button onClick="{{ closeSheet }}" style="{{ btnGhostTop }}">Batal</button>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ sheetReserve }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Pesan buku" style="position:absolute;left:0;right:0;bottom:0;z-index:51;background:#FFFFFF;border-radius:26px 26px 0 0;padding:10px 22px 40px;animation:rise .3s cubic-bezier(.2,.8,.2,1)">
+    <div style="width:40px;height:5px;border-radius:3px;background:#DDDBD4;margin:0 auto 16px"></div>
+    <h3 style="margin:0 0 3px;font-size:18px;font-weight:700;letter-spacing:-0.01em">Pesan buku (antre)</h3>
+    <p style="font-size:13px;color:#6C7180;margin:0 0 16px">{{ rSub }}</p>
+    <div style="background:#F7F6F2;border:1px solid #E9E7E0;border-radius:14px;padding:5px 14px;margin-bottom:14px">
+      <sc-for list="{{ rKv }}" as="kv" hint-placeholder-count="3">
+        <div style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:8px 0"><span style="color:#6C7180;flex:0 0 auto">{{ kv.k }}</span><span style="font-weight:600;text-align:right">{{ kv.v }}</span></div>
+      </sc-for>
+    </div>
+    <p style="font-size:12.5px;color:#6C7180;line-height:1.55;margin:0 0 14px;text-align:center">Buku ini sedang dipinjam. Kamu akan masuk antrean dan diberi tahu saat tersedia.</p>
+    <button onClick="{{ doReserve }}" style="{{ btnWarn }}">Masuk antrean</button>
+    <button onClick="{{ closeSheet }}" style="{{ btnGhostTop }}">Batal</button>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ sheetReturn }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Kembalikan buku" style="position:absolute;left:0;right:0;bottom:0;z-index:51;background:#FFFFFF;border-radius:26px 26px 0 0;padding:10px 22px 40px;animation:rise .3s cubic-bezier(.2,.8,.2,1)">
+    <div style="width:40px;height:5px;border-radius:3px;background:#DDDBD4;margin:0 auto 16px"></div>
+    <h3 style="margin:0 0 3px;font-size:18px;font-weight:700;letter-spacing:-0.01em">Kembalikan buku</h3>
+    <p style="font-size:13px;color:#6C7180;margin:0 0 16px">{{ retSub }}</p>
+    <div style="font-size:10.5px;letter-spacing:0.11em;text-transform:uppercase;color:#6C7180;font-weight:700;text-align:center;margin-bottom:6px">Kode pengembalian</div>
+    <div style="font-size:28px;font-weight:800;letter-spacing:0.22em;text-align:center;color:#20242F;padding-left:0.22em;margin-bottom:14px;font-variant-numeric:tabular-nums">{{ retCodeSpaced }}</div>
+    <div style="background:#fff;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px 8px">{{ retBarcode }}<div style="text-align:center;font-size:12.5px;font-weight:600;letter-spacing:0.3em;color:#6C7180;margin-top:8px;padding-left:0.3em;font-variant-numeric:tabular-nums">{{ retCodeSpaced }}</div></div>
+    <p style="font-size:12.5px;color:#6C7180;line-height:1.55;margin:14px 0;text-align:center">Tunjukkan kode ini ke petugas meja depan. Ia akan memindainya untuk mencatat pengembalian.</p>
+    <button onClick="{{ doReturn }}" style="{{ btnPrimary }}">Petugas pindai &amp; konfirmasi</button>
+    <p style="font-size:11px;color:#9AA0AC;text-align:center;margin:8px 0 0">Di aplikasi asli, langkah ini dilakukan dari perangkat petugas.</p>
+    <button onClick="{{ closeSheet }}" style="{{ btnGhostTop }}">Batal</button>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ sheetSuggest }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Usulkan buku" style="position:absolute;left:0;right:0;bottom:0;z-index:51;background:#FFFFFF;border-radius:26px 26px 0 0;padding:10px 22px 40px;animation:rise .3s cubic-bezier(.2,.8,.2,1)">
+    <div style="width:40px;height:5px;border-radius:3px;background:#DDDBD4;margin:0 auto 16px"></div>
+    <h3 style="margin:0 0 3px;font-size:18px;font-weight:700;letter-spacing:-0.01em">Usulkan buku baru</h3>
+    <p style="font-size:13px;color:#6C7180;margin:0 0 16px">Beri tahu petugas buku yang kamu harap ada di perpustakaan.</p>
+    <div style="margin-bottom:14px"><label style="display:block;font-size:12px;font-weight:600;color:#6C7180;margin-bottom:6px;letter-spacing:0.02em">Judul buku</label><input value="{{ sgT }}" onChange="{{ onSgT }}" placeholder="mis. Mengenal Kehendak Tuhan" style="width:100%;font-size:14px;color:#20242F;background:#F7F6F2;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px;outline:none" style-focus="border-color:#414D8B" /></div>
+    <div style="margin-bottom:14px"><label style="display:block;font-size:12px;font-weight:600;color:#6C7180;margin-bottom:6px;letter-spacing:0.02em">Penulis (opsional)</label><input value="{{ sgA }}" onChange="{{ onSgA }}" placeholder="mis. John Ortberg" style="width:100%;font-size:14px;color:#20242F;background:#F7F6F2;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px;outline:none" style-focus="border-color:#414D8B" /></div>
+    <div style="margin-bottom:16px"><label style="display:block;font-size:12px;font-weight:600;color:#6C7180;margin-bottom:6px;letter-spacing:0.02em">Alasan (opsional)</label><textarea value="{{ sgN }}" onChange="{{ onSgN }}" placeholder="Kenapa buku ini bagus untuk koleksi?" style="width:100%;font-size:14px;color:#20242F;background:#F7F6F2;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px;outline:none;resize:none;min-height:74px;font-family:inherit" style-focus="border-color:#414D8B"></textarea></div>
+    <button onClick="{{ doSuggest }}" style="{{ btnPrimary }}">Kirim usulan</button>
+    <button onClick="{{ closeSheet }}" style="{{ btnGhostTop }}">Batal</button>
+  </div>
+  </sc-if>
+
+  <div style="{{ toastStyle }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8FE0B8" stroke-width="3" style="flex:0 0 auto"><path d="M20 6L9 17l-5-5"></path></svg><span>{{ toastMsg }}</span></div>
+
+  <sc-if value="{{ splash }}" hint-placeholder-val="{{ true }}">
+  <div data-screen-label="Splash" style="position:absolute;inset:0;z-index:100;background:#FDFDFB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px">
+    <img src="uploads/gsja-library/logo-GSJA-png.png" alt="Logo GSJA" style="width:150px;height:auto;object-fit:contain;animation:pop .6s cubic-bezier(.2,1.2,.4,1)" />
+    <div style="font-size:11px;font-weight:700;color:#414D8B;letter-spacing:0.15em;text-transform:uppercase;text-align:center">Perpustakaan GSJA Betlehem Bogor</div>
+    <div style="width:26px;height:26px;border-radius:50%;border:3px solid #EDEFF7;border-top-color:#414D8B;animation:spin .8s linear infinite;margin-top:2px"></div>
+  </div>
+  </sc-if>
+
+</div>
+</x-import>
+</sc-if>
+
+<sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Aplikasi desktop" style="position:relative;width:1240px;max-width:100%;height:840px;background:#F7F6F2;border-radius:20px;overflow:hidden;border:1px solid rgba(0,0,0,0.07);box-shadow:0 40px 80px rgba(32,36,47,0.16);display:flex;font-size:14px;line-height:1.5;letter-spacing:-0.005em">
+  <aside style="width:248px;flex:0 0 auto;background:#FFFFFF;border-right:1px solid #ECEAE4;display:flex;flex-direction:column;padding:26px 16px 20px">
+    <div style="display:flex;align-items:center;gap:11px;padding:0 8px">
+      <img src="uploads/gsja-library/logo-GSJA-png.png" alt="Logo GSJA" style="height:38px;width:auto;object-fit:contain" />
+      <div style="display:flex;flex-direction:column;line-height:1">
+        <span style="font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:#414D8B;font-weight:700;margin-bottom:4px">Perpustakaan</span>
+        <span style="font-size:14.5px;font-weight:700;letter-spacing:-0.01em">GSJA Betlehem Bogor</span>
+      </div>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:4px;margin-top:30px">
+      <button onClick="{{ goHome }}" style="{{ navHomeStyle }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5L12 3l9 7.5"></path><path d="M5 9.5V21h14V9.5"></path></svg>Beranda</button>
+      <button onClick="{{ goKatalog }}" style="{{ navKatalogStyle }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="13" y="4" width="8" height="16" rx="1.5"></rect></svg>Katalog</button>
+      <button onClick="{{ goLoans }}" style="{{ navLoansStyle }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"></path></svg><span style="flex:1 1 auto;text-align:left">Pinjaman</span><sc-if value="{{ showLoanBadge }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#B8433A;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ overdueCount }}</span></sc-if></button>
+      <button onClick="{{ goProfil }}" style="{{ navProfilStyle }}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 4-6 8-6s8 2 8 6"></path></svg>Profil</button>
+    </nav>
+    <div style="flex:1 1 auto"></div>
+    <div style="background:#F7F6F2;border-radius:14px;padding:12px;display:flex;align-items:center;gap:11px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#414D8B;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex:0 0 auto">{{ avatarInitial }}</div>
+      <div style="min-width:0"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ memberName }}</div><div style="font-size:11px;color:#6C7180;margin-top:1px">Anggota · sejak 2023</div></div>
+    </div>
+    <p style="font-size:10.5px;color:#9AA0AC;margin:14px 4px 0">Jam buka: Minggu 08.00–13.00 · Meja depan perpustakaan</p>
+  </aside>
+
+  <main style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column">
+    <div style="flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:26px 36px 0">
+      <h1 style="font-size:21px;font-weight:700;margin:0;letter-spacing:-0.02em">{{ pageTitle }}</h1>
+      <button onClick="{{ goProfil }}" style="width:36px;height:36px;border-radius:50%;background:#414D8B;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer">{{ avatarInitial }}</button>
+    </div>
+    <div ref="{{ deskRef }}" style="flex:1 1 auto;overflow-y:auto;padding:22px 36px 40px">
+
+      <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <section style="animation:fade .22s ease;max-width:980px">
+        <div style="background:linear-gradient(140deg,#4A569B,#333D6E);color:#fff;border-radius:18px;padding:22px 26px;display:flex;align-items:center;justify-content:space-between;gap:20px;box-shadow:0 14px 30px rgba(51,61,110,0.2);margin-bottom:26px">
+          <div>
+            <div style="font-size:11px;letter-spacing:0.1em;text-transform:uppercase;opacity:0.75;font-weight:600">Buku sedang dipinjam</div>
+            <div style="font-size:32px;font-weight:800;margin:5px 0 3px;letter-spacing:-0.02em;line-height:1.05;font-variant-numeric:tabular-nums">{{ activeCount }}<span style="opacity:0.55;font-size:22px;font-weight:600"> / {{ limitNum }}</span></div>
+            <div style="font-size:12.5px;opacity:0.72">{{ limitSub }}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <sc-if value="{{ hasOverdue }}" hint-placeholder-val="{{ false }}"><div style="background:rgba(255,255,255,0.14);border-radius:12px;padding:10px 14px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:8px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg><span>{{ overdueText }}</span></div></sc-if>
+            <button onClick="{{ goLoans }}" style="background:rgba(255,255,255,0.15);color:#fff;border:none;font-size:13px;font-weight:600;padding:11px 16px;border-radius:11px;cursor:pointer;white-space:nowrap">Pinjaman saya</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin:0 0 14px"><h2 style="font-size:16px;font-weight:700;margin:0;letter-spacing:-0.01em">Baru masuk &amp; sering dipinjam</h2></div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:30px">
+          <sc-for list="{{ deskDiscover }}" as="dd" hint-placeholder-count="5">
+            <button onClick="{{ dd.open }}" style="flex:0 0 auto;width:126px;background:none;border:none;text-align:left;cursor:pointer;padding:0" style-hover="opacity:0.85">
+              <div style="{{ dd.coverStyle }}"><sc-if value="{{ dd.hasTag }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:7px;left:7px;font-size:8.5px;font-weight:700;letter-spacing:0.06em;padding:3px 6px;border-radius:6px;background:rgba(0,0,0,0.3);color:#fff">{{ dd.tag }}</span></sc-if>{{ dd.title }}</div>
+              <div style="font-size:12.5px;font-weight:600;margin:9px 0 1px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#20242F">{{ dd.title }}</div>
+              <div style="font-size:11px;color:#6C7180;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dd.author }}</div>
+            </button>
+          </sc-for>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin:0 0 14px">
+          <h2 style="font-size:16px;font-weight:700;margin:0;letter-spacing:-0.01em">Tersedia untuk dipinjam</h2>
+          <span style="font-size:12.5px;color:#6C7180;font-weight:500">{{ homeCntText }}</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+          <sc-for list="{{ homeBooks }}" as="bk" hint-placeholder-count="4">
+            <button onClick="{{ bk.open }}" style="display:flex;align-items:center;gap:13px;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;padding:12px;text-align:left;cursor:pointer" style-hover="box-shadow:0 6px 18px rgba(32,36,47,0.08)">
+              <div style="{{ bk.coverStyle }}">{{ bk.title }}</div>
+              <div style="flex:1 1 auto;min-width:0">
+                <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;color:#20242F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ bk.title }}</div>
+                <div style="font-size:12.5px;color:#6C7180;margin:2px 0 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ bk.author }}</div>
+                <div style="display:flex;align-items:center;gap:10px"><span style="{{ bk.availStyle }}"><span style="{{ bk.dotStyle }}"></span>{{ bk.availText }}</span><span style="font-size:11.5px;font-weight:600;color:#A0761E">★ {{ bk.rating }}</span></div>
+              </div>
+              <div style="flex:0 0 auto;color:#B9BEC9;font-size:20px">›</div>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+      </sc-if>
+
+      <sc-if value="{{ isKatalog }}" hint-placeholder-val="{{ false }}">
+      <section style="animation:fade .22s ease;max-width:980px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap">
+          <div style="display:flex;align-items:center;gap:10px;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:14px;padding:11px 14px;width:340px">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#6C7180" stroke-width="2.2"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4-4"></path></svg>
+            <input value="{{ catQ }}" onChange="{{ onCatQ }}" placeholder="Cari judul atau penulis" style="border:none;outline:none;font-size:14px;color:#20242F;width:100%;background:transparent" />
+          </div>
+          <div style="display:flex;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:11px;padding:3px;gap:2px">
+            <sc-for list="{{ sorts }}" as="so2" hint-placeholder-count="4"><button onClick="{{ so2.click }}" style="{{ so2.style }}">{{ so2.label }}</button></sc-for>
+          </div>
+          <button onClick="{{ toggleAvail }}" style="margin-left:auto;display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:#6C7180;cursor:pointer;background:none;border:none;padding:0"><span>Tersedia</span><span style="{{ availTrack }}"><span style="{{ availThumb }}"></span></span></button>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+          <sc-for list="{{ chips }}" as="ch2" hint-placeholder-count="4"><button onClick="{{ ch2.click }}" style="{{ ch2.style }}">{{ ch2.label }}</button></sc-for>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+          <sc-for list="{{ catBooks }}" as="cb2" hint-placeholder-count="4">
+            <button onClick="{{ cb2.open }}" style="display:flex;align-items:center;gap:13px;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;padding:12px;text-align:left;cursor:pointer" style-hover="box-shadow:0 6px 18px rgba(32,36,47,0.08)">
+              <div style="{{ cb2.coverStyle }}">{{ cb2.title }}</div>
+              <div style="flex:1 1 auto;min-width:0">
+                <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;color:#20242F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cb2.title }}</div>
+                <div style="font-size:12.5px;color:#6C7180;margin:2px 0 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cb2.author }}</div>
+                <div style="display:flex;align-items:center;gap:10px"><span style="{{ cb2.availStyle }}"><span style="{{ cb2.dotStyle }}"></span>{{ cb2.availText }}</span><span style="font-size:11.5px;font-weight:600;color:#A0761E">★ {{ cb2.rating }}</span></div>
+              </div>
+              <div style="flex:0 0 auto;color:#B9BEC9;font-size:20px">›</div>
+            </button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ catEmpty }}" hint-placeholder-val="{{ false }}"><div style="text-align:center;padding:36px 20px;color:#6C7180"><h3 style="margin:0 0 5px;color:#20242F;font-size:15px;font-weight:700">Kosong</h3><p style="margin:0;font-size:13px">Tidak ada buku yang cocok dengan filter.</p></div></sc-if>
+      </section>
+      </sc-if>
+
+      <sc-if value="{{ isLoans }}" hint-placeholder-val="{{ false }}">
+      <section style="animation:fade .22s ease;max-width:980px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;margin:0 0 14px"><span style="font-size:12.5px;color:#6C7180;font-weight:500">{{ loansCntText }}</span></div>
+        <sc-if value="{{ loansEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:38px 20px;color:#6C7180">
+            <div style="width:52px;height:52px;border-radius:14px;background:#EDEFF7;color:#414D8B;display:flex;align-items:center;justify-content:center;margin:0 auto 14px"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"></path></svg></div>
+            <h3 style="margin:0 0 5px;color:#20242F;font-size:15px;font-weight:700">Belum ada pinjaman</h3><p style="margin:0;font-size:13px">Cari buku dan pinjam untuk mulai membaca.</p>
+          </div>
+        </sc-if>
+        <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+          <sc-for list="{{ activeLoanCards }}" as="ln2" hint-placeholder-count="2">
+            <div style="{{ ln2.cardStyleD }}">
+              <div style="display:flex;gap:13px;align-items:center;margin-bottom:12px">
+                <div style="{{ ln2.coverStyle }}">{{ ln2.title }}</div>
+                <div style="flex:1 1 auto;min-width:0">
+                  <div style="font-size:14.5px;font-weight:600;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ln2.title }}</div>
+                  <div style="font-size:12.5px;color:#6C7180;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ln2.author }}</div>
+                  <div style="{{ ln2.dueStyle }}">{{ ln2.dueText }}</div>
+                </div>
+                <span style="{{ ln2.pillStyle }}">{{ ln2.pillText }}</span>
+              </div>
+              <div style="display:flex;gap:9px">
+                <button disabled="{{ ln2.renewDisabled }}" onClick="{{ ln2.renew }}" style="{{ ln2.renewStyle }}">{{ ln2.renewText }}</button>
+                <button onClick="{{ ln2.ret }}" style="{{ ln2.returnStyle }}">Kembalikan</button>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{ hasQueue }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:#6C7180;font-weight:700;margin:24px 0 12px">Antrean saya</div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+            <sc-for list="{{ queueCards }}" as="qc2" hint-placeholder-count="1">
+              <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;padding:12px">
+                <div style="display:flex;gap:13px;align-items:center;margin-bottom:12px">
+                  <div style="{{ qc2.coverStyle }}">{{ qc2.title }}</div>
+                  <div style="flex:1 1 auto;min-width:0">
+                    <div style="font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ qc2.title }}</div>
+                    <div style="font-size:12.5px;color:#6C7180;margin:2px 0 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ qc2.author }}</div>
+                    <div style="font-size:12px;font-weight:600;margin-top:5px;color:#A0761E">Menunggu tersedia · antrean #1</div>
+                  </div>
+                  <span style="{{ qc2.pillStyle }}">Antre</span>
+                </div>
+                <button onClick="{{ qc2.cancel }}" style="{{ qc2.cancelStyle }}">Batalkan antrean</button>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ hasHistory }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:#6C7180;font-weight:700;margin:24px 0 12px">Riwayat</div>
+          <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+            <sc-for list="{{ historyCards }}" as="hc2" hint-placeholder-count="1">
+              <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;padding:12px;opacity:0.92">
+                <div style="display:flex;gap:13px;align-items:center">
+                  <div style="{{ hc2.coverStyle }}">{{ hc2.title }}</div>
+                  <div style="flex:1 1 auto;min-width:0">
+                    <div style="font-size:14.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ hc2.title }}</div>
+                    <div style="font-size:12.5px;color:#6C7180;margin:2px 0 0">{{ hc2.retText }}</div>
+                  </div>
+                  <span style="{{ hc2.pillStyle }}">Selesai</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+      </section>
+      </sc-if>
+
+      <sc-if value="{{ isProfil }}" hint-placeholder-val="{{ false }}">
+      <section style="animation:fade .22s ease;max-width:560px">
+        <div style="background:linear-gradient(150deg,#4A569B,#333D6E);color:#fff;border-radius:20px;padding:20px;display:flex;align-items:center;gap:14px;margin:0 0 16px;box-shadow:0 12px 26px rgba(51,61,110,0.2)">
+          <div style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;flex:0 0 auto">{{ avatarInitial }}</div>
+          <div><div style="font-size:17.5px;font-weight:700;letter-spacing:-0.01em">{{ memberName }}</div><div style="font-size:12.5px;opacity:0.8;margin-top:3px">Anggota GSJA Betlehem Bogor · sejak 2023</div></div>
+        </div>
+        <div style="display:flex;gap:11px;margin-bottom:18px">
+          <div style="flex:1;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:15px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800;color:#414D8B;font-variant-numeric:tabular-nums">{{ readingCount }}</div><div style="font-size:11px;color:#6C7180;font-weight:600;margin-top:2px">Dibaca</div></div>
+          <div style="flex:1;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:15px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800;color:#414D8B;font-variant-numeric:tabular-nums">{{ doneCount }}</div><div style="font-size:11px;color:#6C7180;font-weight:600;margin-top:2px">Selesai</div></div>
+          <div style="flex:1;background:#FFFFFF;border:1px solid #E9E7E0;border-radius:15px;padding:14px;text-align:center"><div style="font-size:22px;font-weight:800;color:#414D8B;font-variant-numeric:tabular-nums">{{ queueCount }}</div><div style="font-size:11px;color:#6C7180;font-weight:600;margin-top:2px">Antre</div></div>
+        </div>
+        <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;overflow:hidden;margin-bottom:18px">
+          <button onClick="{{ goLoans }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;border-bottom:1px solid #E9E7E0;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F"><span style="color:#414D8B;display:flex"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"></path></svg></span><span style="flex:1 1 auto">Pinjaman &amp; riwayat</span><span style="color:#B9BEC9;font-size:19px">›</span></button>
+          <button onClick="{{ openSuggest }}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:none;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F"><span style="color:#414D8B;display:flex"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></span><span style="flex:1 1 auto">Usulkan buku baru</span><span style="color:#B9BEC9;font-size:19px">›</span></button>
+        </div>
+        <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;overflow:hidden">
+          <button onClick="{{ toggleNotifDue }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:none;border-bottom:1px solid #E9E7E0;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F"><span style="flex:1 1 auto">Pengingat jatuh tempo</span><span style="{{ swDueTrack }}"><span style="{{ swDueThumb }}"></span></span></button>
+          <button onClick="{{ toggleNotifAvail }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:none;border-bottom:1px solid #E9E7E0;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F"><span style="flex:1 1 auto">Buku pesanan tersedia</span><span style="{{ swAvailTrack }}"><span style="{{ swAvailThumb }}"></span></span></button>
+          <button onClick="{{ toggleNotifBaru }}" style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:none;font-size:14px;font-weight:600;width:100%;background:none;cursor:pointer;text-align:left;color:#20242F"><span style="flex:1 1 auto">Buku baru masuk koleksi</span><span style="{{ swBaruTrack }}"><span style="{{ swBaruThumb }}"></span></span></button>
+        </div>
+      </section>
+      </sc-if>
+    </div>
+  </main>
+
+  <sc-if value="{{ detailOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;z-index:40;background:rgba(21,25,37,0.45);display:flex;align-items:center;justify-content:center;padding:40px">
+    <div style="width:680px;max-height:100%;overflow-y:auto;background:#F7F6F2;border-radius:20px;padding:28px;animation:fade .2s ease;position:relative">
+      <button onClick="{{ closeDetail }}" aria-label="Tutup" style="position:absolute;top:16px;right:16px;width:34px;height:34px;border-radius:10px;border:1px solid #E9E7E0;background:#fff;cursor:pointer;color:#6C7180;font-size:16px;line-height:1">✕</button>
+      <div style="display:flex;gap:26px;align-items:flex-start">
+        <div style="{{ dCoverStyle }}">{{ dTitle }}</div>
+        <div style="flex:1 1 auto;min-width:0">
+          <h1 style="font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.25;margin:2px 0 5px">{{ dTitle }}</h1>
+          <p style="font-size:14px;color:#6C7180;margin:0 0 10px">{{ dAuthor }}</p>
+          <div style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#A0761E;margin-bottom:13px"><span style="letter-spacing:0.1em">{{ dStars }}</span><span>{{ dRating }}</span><span style="color:#6C7180;font-weight:500">{{ dRatings }}</span></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px"><sc-for list="{{ dBadges }}" as="bd2" hint-placeholder-count="2"><span style="{{ bd2.style }}">{{ bd2.text }}</span></sc-for></div>
+          <button disabled="{{ dCtaDisabled }}" onClick="{{ dCtaClick }}" style="{{ dCtaStyle }}">{{ dCtaText }}</button>
+        </div>
+      </div>
+      <div style="height:1px;background:#E9E7E0;margin:22px 0 18px"></div>
+      <h4 style="font-size:11.5px;letter-spacing:0.09em;text-transform:uppercase;color:#6C7180;margin:0 0 8px;font-weight:700">Tentang buku</h4>
+      <p style="margin:0 0 16px;font-size:14.5px;line-height:1.65;color:#39404E;text-wrap:pretty">{{ dDesc }}</p>
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:32px">
+        <sc-for list="{{ dKv }}" as="kv2" hint-placeholder-count="6">
+          <div style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:9px 0;border-bottom:1px solid #EEECE6"><span style="color:#6C7180;flex:0 0 auto">{{ kv2.k }}</span><span style="font-weight:600;text-align:right">{{ kv2.v }}</span></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ anySheet }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;z-index:50;background:rgba(21,25,37,0.45);display:flex;align-items:center;justify-content:center;padding:40px" onClick="{{ closeSheetScrim }}">
+    <div style="width:430px;max-height:100%;overflow-y:auto;background:#FFFFFF;border-radius:18px;padding:24px;animation:fade .2s ease">
+      <sc-if value="{{ sheetConfirm }}" hint-placeholder-val="{{ false }}">
+        <h3 style="margin:0 0 3px;font-size:18px;font-weight:700;letter-spacing:-0.01em">Konfirmasi peminjaman</h3>
+        <p style="font-size:13px;color:#6C7180;margin:0 0 16px">{{ cSub }}</p>
+        <div style="background:#F7F6F2;border:1px solid #E9E7E0;border-radius:14px;padding:5px 14px;margin-bottom:16px">
+          <sc-for list="{{ cKv }}" as="kvc" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:8px 0"><span style="color:#6C7180">{{ kvc.k }}</span><span style="font-weight:600;text-align:right">{{ kvc.v }}</span></div></sc-for>
+        </div>
+        <button onClick="{{ doBorrow }}" style="{{ btnPrimary }}">Konfirmasi pinjam</button>
+        <button onClick="{{ closeSheet }}" style="{{ btnGhostTop }}">Batal</button>
+      </sc-if>
+      <sc-if value="{{ sheetReserve }}" hint-placeholder-val="{{ false }}">
+        <h3 style="margin:0 0 3px;font-size:18px;font-weight:700;letter-spacing:-0.01em">Pesan buku (antre)</h3>
+        <p style="font-size:13px;color:#6C7180;margin:0 0 16px">{{ rSub }}</p>
+        <div style="background:#F7F6F2;border:1px solid #E9E7E0;border-radius:14px;padding:5px 14px;margin-bottom:14px">
+          <sc-for list="{{ rKv }}" as="kvr" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:8px 0"><span style="color:#6C7180">{{ kvr.k }}</span><span style="font-weight:600;text-align:right">{{ kvr.v }}</span></div></sc-for>
+        </div>
+        <p style="font-size:12.5px;color:#6C7180;line-height:1.55;margin:0 0 14px;text-align:center">Buku ini sedang dipinjam. Kamu akan masuk antrean dan diberi tahu saat tersedia.</p>
+        <button onClick="{{ doReserve }}" style="{{ btnWarn }}">Masuk antrean</button>
+        <button onClick="{{ closeSheet }}" style="{{ btnGhostTop }}">Batal</button>
+      </sc-if>
+      <sc-if value="{{ sheetReturn }}" hint-placeholder-val="{{ false }}">
+        <h3 style="margin:0 0 3px;font-size:18px;font-weight:700;letter-spacing:-0.01em">Kembalikan buku</h3>
+        <p style="font-size:13px;color:#6C7180;margin:0 0 16px">{{ retSub }}</p>
+        <div style="font-size:10.5px;letter-spacing:0.11em;text-transform:uppercase;color:#6C7180;font-weight:700;text-align:center;margin-bottom:6px">Kode pengembalian</div>
+        <div style="font-size:28px;font-weight:800;letter-spacing:0.22em;text-align:center;padding-left:0.22em;margin-bottom:14px;font-variant-numeric:tabular-nums">{{ retCodeSpaced }}</div>
+        <div style="background:#fff;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px 8px">{{ retBarcode }}<div style="text-align:center;font-size:12.5px;font-weight:600;letter-spacing:0.3em;color:#6C7180;margin-top:8px;padding-left:0.3em;font-variant-numeric:tabular-nums">{{ retCodeSpaced }}</div></div>
+        <p style="font-size:12.5px;color:#6C7180;line-height:1.55;margin:14px 0;text-align:center">Tunjukkan kode ini ke petugas meja depan. Ia akan memindainya untuk mencatat pengembalian.</p>
+        <button onClick="{{ doReturn }}" style="{{ btnPrimary }}">Petugas pindai &amp; konfirmasi</button>
+        <button onClick="{{ closeSheet }}" style="{{ btnGhostTop }}">Batal</button>
+      </sc-if>
+      <sc-if value="{{ sheetSuggest }}" hint-placeholder-val="{{ false }}">
+        <h3 style="margin:0 0 3px;font-size:18px;font-weight:700;letter-spacing:-0.01em">Usulkan buku baru</h3>
+        <p style="font-size:13px;color:#6C7180;margin:0 0 16px">Beri tahu petugas buku yang kamu harap ada di perpustakaan.</p>
+        <div style="margin-bottom:14px"><label style="display:block;font-size:12px;font-weight:600;color:#6C7180;margin-bottom:6px">Judul buku</label><input value="{{ sgT }}" onChange="{{ onSgT }}" placeholder="mis. Mengenal Kehendak Tuhan" style="width:100%;font-size:14px;background:#F7F6F2;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px;outline:none" style-focus="border-color:#414D8B" /></div>
+        <div style="margin-bottom:14px"><label style="display:block;font-size:12px;font-weight:600;color:#6C7180;margin-bottom:6px">Penulis (opsional)</label><input value="{{ sgA }}" onChange="{{ onSgA }}" placeholder="mis. John Ortberg" style="width:100%;font-size:14px;background:#F7F6F2;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px;outline:none" style-focus="border-color:#414D8B" /></div>
+        <div style="margin-bottom:16px"><label style="display:block;font-size:12px;font-weight:600;color:#6C7180;margin-bottom:6px">Alasan (opsional)</label><textarea value="{{ sgN }}" onChange="{{ onSgN }}" placeholder="Kenapa buku ini bagus untuk koleksi?" style="width:100%;font-size:14px;background:#F7F6F2;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px;outline:none;resize:none;min-height:74px;font-family:inherit" style-focus="border-color:#414D8B"></textarea></div>
+        <button onClick="{{ doSuggest }}" style="{{ btnPrimary }}">Kirim usulan</button>
+        <button onClick="{{ closeSheet }}" style="{{ btnGhostTop }}">Batal</button>
+      </sc-if>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ successOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:absolute;inset:0;z-index:55;background:rgba(21,25,37,0.45);display:flex;align-items:center;justify-content:center;padding:40px">
+    <div style="width:440px;max-height:100%;overflow-y:auto;background:#F7F6F2;border-radius:20px;padding:28px;text-align:center;animation:fade .2s ease">
+      <div style="{{ sIconStyleD }}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"></path></svg></div>
+      <h2 style="font-size:21px;font-weight:700;margin:0 0 6px;letter-spacing:-0.02em">{{ sTitle }}</h2>
+      <p style="font-size:13.5px;color:#6C7180;margin:0 0 18px;line-height:1.55;text-wrap:pretty">{{ sSub }}</p>
+      <div style="background:#FFFFFF;border:1px solid #E9E7E0;border-radius:16px;padding:18px;text-align:left">
+        <sc-if value="{{ sHasCode }}" hint-placeholder-val="{{ false }}">
+          <div style="font-size:10.5px;letter-spacing:0.11em;text-transform:uppercase;color:#6C7180;font-weight:700;text-align:center;margin-bottom:6px">{{ sCodeLabel }}</div>
+          <div style="font-size:28px;font-weight:800;letter-spacing:0.22em;text-align:center;padding-left:0.22em;margin-bottom:14px;font-variant-numeric:tabular-nums">{{ sCodeSpaced }}</div>
+          <div style="background:#fff;border:1px solid #E9E7E0;border-radius:12px;padding:12px 14px 8px">{{ sBarcode }}<div style="text-align:center;font-size:12.5px;font-weight:600;letter-spacing:0.3em;color:#6C7180;margin-top:8px;padding-left:0.3em;font-variant-numeric:tabular-nums">{{ sCodeSpaced }}</div></div>
+          <div style="border-top:1.5px dashed #E4E2DB;margin:16px -18px 12px"></div>
+        </sc-if>
+        <div style="font-size:15.5px;font-weight:700;margin-bottom:2px">{{ sBookTitle }}</div>
+        <div style="font-size:13px;color:#6C7180;margin-bottom:10px">{{ sBookAuthor }}</div>
+        <sc-for list="{{ sKv }}" as="kvs" hint-placeholder-count="2"><div style="display:flex;justify-content:space-between;gap:12px;font-size:13.5px;padding:6px 0"><span style="color:#6C7180">{{ kvs.k }}</span><span style="font-weight:600;text-align:right">{{ kvs.v }}</span></div></sc-for>
+      </div>
+      <sc-if value="{{ sHasHint }}" hint-placeholder-val="{{ false }}"><p style="font-size:12.5px;color:#6C7180;line-height:1.55;margin:14px 0 0">{{ sHint }}</p></sc-if>
+      <div style="margin-top:18px">
+        <button onClick="{{ sPrimaryClick }}" style="{{ sPrimaryStyle }}">{{ sPrimaryText }}</button>
+        <sc-if value="{{ sHasSecondary }}" hint-placeholder-val="{{ false }}"><button onClick="{{ sSecondaryClick }}" style="{{ sSecondaryStyle }}">Kembali ke beranda</button></sc-if>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <div style="{{ toastStyleD }}"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8FE0B8" stroke-width="3" style="flex:0 0 auto"><path d="M20 6L9 17l-5-5"></path></svg><span>{{ toastMsg }}</span></div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;tampilan&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Mobile&quot;,&quot;Desktop&quot;],&quot;default&quot;:&quot;Mobile&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Tampilan&quot;},&quot;namaAnggota&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Christian&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Data anggota&quot;},&quot;batasPinjam&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:3,&quot;min&quot;:1,&quot;max&quot;:10,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Aturan perpustakaan&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.contentRef = React.createRef();
+    this.deskRef = React.createRef();
+    const books = [
+      {id:'b1',title:'Akar yang Kuat',author:'Pdt. Samuel Wijaya',cat:'Renungan',copies:2,shelf:'A-04',spine:'#7E93B8',year:2021,publisher:'Andi Publisher',pages:184,isbn:'978-602-04-1234-5',rating:4.6,ratings:38,borrowCount:52,isNew:false,desc:'Renungan harian untuk membangun iman yang berakar dalam. Cocok menemani saat teduh di pagi hari.'},
+      {id:'b2',title:'Hidup dalam Anugerah',author:'Maria Tanuwidjaja',cat:'Teologi',copies:1,shelf:'B-11',spine:'#8AA890',year:2019,publisher:'Gloria Graffa',pages:246,isbn:'978-979-21-5678-0',rating:4.8,ratings:24,borrowCount:31,isNew:false,desc:'Menyelami makna kasih karunia dan bagaimana anugerah mengubah cara kita menjalani hari demi hari.'},
+      {id:'b3',title:'Damai di Tengah Badai',author:'David Kurniawan',cat:'Renungan',copies:0,shelf:'A-07',spine:'#8791A6',year:2022,publisher:'Immanuel Press',pages:160,isbn:'978-602-11-9876-3',rating:4.4,ratings:41,borrowCount:47,isNew:false,desc:'Perenungan tentang menemukan ketenangan saat menghadapi masa-masa yang berat.'},
+      {id:'b4',title:'Doa yang Mengubah',author:'Grace Halim',cat:'Doa',copies:3,shelf:'C-02',spine:'#9A8098',year:2020,publisher:'Metanoia',pages:208,isbn:'978-623-00-4567-8',rating:4.7,ratings:56,borrowCount:63,isNew:false,desc:'Panduan praktis membangun kehidupan doa yang konsisten, jujur, dan bermakna.'},
+      {id:'b5',title:'Langkah Iman',author:'Yohanes Pratama',cat:'Biografi',copies:1,shelf:'D-09',spine:'#B0937E',year:2023,publisher:'Kasih Karunia',pages:272,isbn:'978-623-12-3344-1',rating:4.5,ratings:19,borrowCount:22,isNew:true,desc:'Perjalanan seorang pelayan yang belajar mempercayai Tuhan di setiap langkah hidupnya.'},
+      {id:'b6',title:'Terang bagi Jiwa',author:'Ruth Santoso',cat:'Renungan',copies:2,shelf:'A-15',spine:'#7FA6A3',year:2024,publisher:'Andi Publisher',pages:150,isbn:'978-602-04-7788-9',rating:4.9,ratings:12,borrowCount:9,isNew:true,desc:'Kumpulan renungan singkat yang menuntun hati kembali kepada pengharapan.'}
+    ];
+    const t0 = this.today0();
+    const mk = d => { const x = new Date(t0); x.setDate(x.getDate()+d); return x; };
+    const loans = [
+      {bookId:'b5',code:'482915',due:mk(-6),borrowedDate:mk(-20),returnedDate:null,status:'active',renewed:false},
+      {bookId:'b1',code:'573018',due:mk(9),borrowedDate:mk(-5),returnedDate:null,status:'active',renewed:false},
+      {bookId:'b2',code:'610274',due:mk(-12),borrowedDate:mk(-26),returnedDate:mk(-12),status:'returned',renewed:false}
+    ];
+    books.find(b=>b.id==='b5').copies = 0; books.find(b=>b.id==='b5').borrowCount++;
+    books.find(b=>b.id==='b1').copies = 1; books.find(b=>b.id==='b1').borrowCount++;
+    this.state = {splash:true,tab:'home',homeQ:'',catQ:'',activeCat:'Semua',catSort:'judul',onlyAvail:false,books,loans,reservations:[{bookId:'b3'}],detailId:null,detailOpen:false,sheet:null,returnCode:null,pendingDue:null,success:null,successOpen:false,toastMsg:'',toastOn:false,notif:{due:true,avail:true,baru:false},sg:{t:'',a:'',n:''}};
+    this.cats = ['Semua','Renungan','Teologi','Doa','Biografi'];
+  }
+  componentDidMount(){ this._t = setTimeout(()=>this.setState({splash:false}), 1600); }
+  componentWillUnmount(){ clearTimeout(this._t); clearTimeout(this._tt); }
+  today0(){ const d = new Date(); d.setHours(0,0,0,0); return d; }
+  fmt(d){ const m=['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']; return d.getDate()+' '+m[d.getMonth()]+' '+d.getFullYear(); }
+  daysLeft(due){ return Math.round((due - this.today0())/86400000); }
+  limit(){ return this.props.batasPinjam ?? 3; }
+  book(id){ return this.state.books.find(b=>b.id===id); }
+  loanByCode(c){ return this.state.loans.find(l=>l.code===c); }
+  activeLoans(){ return this.state.loans.filter(l=>l.status==='active'); }
+  isOverdue(l){ return l.status==='active' && this.daysLeft(l.due) < 0; }
+  gen6(){ let c; do { c = String(Math.floor(100000+Math.random()*900000)); } while (this.state.loans.some(l=>l.code===c)); return c; }
+  spaced(c){ return c.split('').join(' '); }
+  shade(hex, f=0.76){ const n = parseInt(hex.slice(1),16); const r=Math.round(((n>>16)&255)*f), g=Math.round(((n>>8)&255)*f), b=Math.round((n&255)*f); return 'rgb('+r+','+g+','+b+')'; }
+  cover(c, w, h, fs, r){ return {flex:'0 0 auto',width:w,height:h,borderRadius:r,display:'flex',alignItems:'center',justifyContent:'center',textAlign:'center',padding:Math.round(w*0.1),color:'#fff',fontSize:fs,fontWeight:600,lineHeight:1.25,letterSpacing:'0.01em',background:'linear-gradient(155deg,'+c+' 30%,'+this.shade(c)+')',boxShadow:'inset -3px 0 0 rgba(0,0,0,.15), 0 3px 8px rgba(32,36,47,.15)',overflow:'hidden',position:'relative'}; }
+  btn(kind, sm, disabled, flex){
+    const s = {border:'none',fontFamily:'inherit',fontSize:sm?13.5:15,fontWeight:600,padding:sm?'11px 12px':'15px 16px',borderRadius:sm?12:14,cursor:disabled?'default':'pointer',letterSpacing:'-0.01em',textAlign:'center'};
+    if (flex) s.flex = '1 1 0'; else s.width = '100%';
+    if (disabled){ s.background='#E4E5E9'; s.color='#9AA0AC'; return s; }
+    if (kind==='primary'){ s.background='#414D8B'; s.color='#fff'; s.boxShadow='0 8px 18px rgba(65,77,139,.22)'; }
+    else if (kind==='warn'){ s.background='#A0761E'; s.color='#fff'; s.boxShadow='0 8px 18px rgba(160,118,30,.2)'; }
+    else { s.background='#fff'; s.color='#20242F'; s.border='1px solid #E4E2DB'; }
+    return s;
+  }
+  pill(kind){ const map={active:['#EDEFF7','#414D8B'],done:['#E7F1EB','#2E7D5B'],late:['#B8433A','#fff'],queue:['#F6EFDF','#A0761E']}; const p=map[kind]; return {flex:'0 0 auto',alignSelf:'flex-start',fontSize:10.5,fontWeight:700,letterSpacing:'0.02em',padding:'5px 9px',borderRadius:8,background:p[0],color:p[1],whiteSpace:'nowrap',fontVariantNumeric:'tabular-nums'}; }
+  sw(on, big){ const w=big?44:34, h=big?26:20, t=big?22:16, x=big?18:14; return {track:{width:w,height:h,borderRadius:h/2,background:on?'#414D8B':'#D8DBE2',position:'relative',transition:'background .18s',flex:'0 0 auto',display:'block'},thumb:{position:'absolute',top:2,left:2,width:t,height:t,borderRadius:'50%',background:'#fff',boxShadow:'0 1px 3px rgba(0,0,0,.2)',transform:on?'translateX('+x+'px)':'none',transition:'transform .18s',display:'block'}}; }
+  barcode(code){
+    let seed = 7; for (const ch of code) seed = (seed*33 + ch.charCodeAt(0)) >>> 0;
+    const rnd = ()=>{ seed = (seed*1103515245 + 12345) & 0x7fffffff; return seed/0x7fffffff; };
+    let x = 8; const rects = [];
+    while (x < 252){ const w = 1 + Math.floor(rnd()*4); if (rnd() > 0.42 && x+w <= 252) rects.push(React.createElement('rect',{key:x,x:x,y:0,width:w,height:60,fill:'#20242F'})); x += w; }
+    return React.createElement('svg',{viewBox:'0 0 260 60',preserveAspectRatio:'none',style:{width:'100%',height:54,display:'block'}},rects);
+  }
+  stars(r){ const f = Math.round(r); let s=''; for(let i=1;i<=5;i++) s += (i<=f?'★':'☆'); return s; }
+  toastMsg(msg){ clearTimeout(this._tt); this.setState({toastMsg:msg,toastOn:true}); this._tt = setTimeout(()=>this.setState({toastOn:false}), 2600); }
+  showTab(t){ this.setState({tab:t}); [this.contentRef,this.deskRef].forEach(r=>{ if(r.current) r.current.scrollTop = 0; }); }
+  openDetail(id){ this.setState({detailId:id,detailOpen:true}); }
+  openConfirm(){ const due = new Date(this.today0()); due.setDate(due.getDate()+14); this.setState({sheet:'confirm',pendingDue:due}); }
+  doBorrow(){
+    const S = this.state, b = this.book(S.detailId);
+    if (!b || b.copies <= 0 || this.activeLoans().length >= this.limit()){ this.setState({sheet:null}); return; }
+    const code = this.gen6(), due = S.pendingDue;
+    this.setState({
+      loans:[...S.loans,{bookId:b.id,code,due,borrowedDate:new Date(),returnedDate:null,status:'active',renewed:false}],
+      books:S.books.map(x=>x.id===b.id?{...x,copies:x.copies-1,borrowCount:x.borrowCount+1}:x),
+      sheet:null, detailOpen:false, successOpen:true,
+      success:{isWarn:false,title:'Buku sudah dipesan',sub:'Tunjukkan barcode atau kode ini ke petugas meja depan untuk mengambil bukunya.',hasCode:true,code,codeLabel:'Kode peminjaman',bookTitle:b.title,bookAuthor:'oleh '+b.author,kv:[{k:'Ambil di',v:'Meja depan · rak '+b.shelf},{k:'Kembali sebelum',v:this.fmt(due)}],hint:'',primaryText:'Lihat pinjaman saya',primaryGo:'loans',hasSecondary:true}
+    });
+  }
+  renew(code){
+    const l = this.loanByCode(code); if (!l || l.renewed || l.status!=='active') return;
+    const base = l.due < this.today0() ? this.today0() : l.due;
+    const nd = new Date(base); nd.setDate(nd.getDate()+14);
+    this.setState({loans:this.state.loans.map(x=>x.code===code?{...x,due:nd,renewed:true}:x)});
+    this.toastMsg('Diperpanjang sampai '+this.fmt(nd));
+  }
+  doReserve(){
+    const b = this.book(this.state.detailId); if (!b) return;
+    if (this.state.reservations.some(r=>r.bookId===b.id)){ this.setState({sheet:null}); return; }
+    this.setState({reservations:[...this.state.reservations,{bookId:b.id}],sheet:null,detailOpen:false,successOpen:true,
+      success:{isWarn:true,title:'Kamu masuk antrean',sub:'Kami akan memberi tahu lewat notifikasi begitu \u201C'+b.title+'\u201D tersedia dan bisa kamu ambil.',hasCode:false,bookTitle:b.title,bookAuthor:'oleh '+b.author,kv:[{k:'Posisi antrean',v:'#1 (berikutnya)'},{k:'Status',v:'Menunggu tersedia'}],hint:'',primaryText:'Lihat antrean saya',primaryGo:'loans',hasSecondary:false}});
+  }
+  doReturn(){
+    const l = this.loanByCode(this.state.returnCode);
+    if (!l || l.status!=='active'){ this.setState({sheet:null}); return; }
+    const b = this.book(l.bookId), now = new Date();
+    const wasQueued = this.state.reservations.some(r=>r.bookId===b.id);
+    this.setState({
+      loans:this.state.loans.map(x=>x.code===l.code?{...x,status:'returned',returnedDate:now}:x),
+      books:this.state.books.map(x=>x.id===b.id?{...x,copies:x.copies+1}:x),
+      sheet:null, successOpen:true,
+      success:{isWarn:false,title:'Buku sudah dikembalikan',sub:'Pengembalian sudah tercatat. Terima kasih sudah membaca.',hasCode:false,bookTitle:b.title,bookAuthor:'oleh '+b.author,kv:[{k:'Kode transaksi',v:l.code},{k:'Dikembalikan',v:this.fmt(now)},{k:'Status',v:'Selesai'}],hint:wasQueued?'Ada anggota lain yang menunggu buku ini — mereka akan diberi tahu.':'',primaryText:'Selesai',primaryGo:'loans',hasSecondary:false}
+    });
+  }
+  doSuggest(){
+    const t = this.state.sg.t.trim();
+    if (!t){ this.toastMsg('Tulis judul bukunya dulu ya'); return; }
+    this.setState({sg:{t:'',a:'',n:''},sheet:null});
+    this.toastMsg('Usulan terkirim ke petugas. Terima kasih!');
+  }
+  renderVals(){
+    const S = this.state;
+    const name = this.props.namaAnggota ?? 'Kevin Wijaya';
+    const device = this.props.tampilan ?? 'Mobile';
+    const LIM = this.limit();
+    const act = this.activeLoans();
+    const od = act.filter(l=>this.isOverdue(l));
+    const rowVM = b => { const avail = b.copies > 0; return {key:b.id,title:b.title,author:b.author,
+      coverStyle:this.cover(b.spine,46,64,8.5,7),
+      availText:avail?('Tersedia · '+b.copies+' eks.'):'Sedang dipinjam',
+      availStyle:{display:'inline-flex',alignItems:'center',gap:6,fontSize:11.5,fontWeight:600,color:avail?'#2E7D5B':'#98A0AC'},
+      dotStyle:{width:7,height:7,borderRadius:'50%',background:avail?'#2E7D5B':'#B9BEC9',display:'inline-block'},
+      rating:b.rating.toFixed(1), open:()=>this.openDetail(b.id)}; };
+    const hVM = (b, tag) => ({key:b.id+tag,title:b.title,author:b.author,tag,hasTag:!!tag,coverStyle:this.cover(b.spine,118,158,11,10),open:()=>this.openDetail(b.id)});
+    const hq = S.homeQ.trim().toLowerCase();
+    const match = (b,q) => !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+    const homeBooks = S.books.filter(b=>b.copies>0).filter(b=>match(b,hq)).map(rowVM);
+    const cq = S.catQ.trim().toLowerCase();
+    let catList = S.books.filter(b=>S.activeCat==='Semua'||b.cat===S.activeCat).filter(b=>match(b,cq)).filter(b=>!S.onlyAvail||b.copies>0);
+    catList = [...catList].sort((a,b)=>{
+      if (S.catSort==='judul') return a.title.localeCompare(b.title);
+      if (S.catSort==='penulis') return a.author.localeCompare(b.author);
+      if (S.catSort==='populer') return b.borrowCount - a.borrowCount;
+      return b.rating - a.rating;
+    });
+    const newBooks = S.books.filter(b=>b.isNew).map(b=>hVM(b,'BARU'));
+    const popularBooks = [...S.books].sort((a,b)=>b.borrowCount-a.borrowCount).slice(0,4).map(b=>hVM(b,''));
+    const lateLoans = od.map(l=>{ const b=this.book(l.bookId); return {key:l.code,title:b.title,author:b.author,coverStyle:this.cover(b.spine,46,64,8.5,7),lateText:'Terlambat '+Math.abs(this.daysLeft(l.due))+' hari',pillStyle:this.pill('late'),returnStyle:this.btn('primary',true,false,false),ret:()=>this.setState({sheet:'return',returnCode:l.code})}; });
+    const activeLoanCards = act.map(l=>{
+      const b = this.book(l.bookId), dl = this.daysLeft(l.due), late = dl < 0, soon = dl >= 0 && dl <= 2;
+      return {key:l.code,title:b.title,author:b.author,coverStyle:this.cover(b.spine,46,64,8.5,7),
+        dueText: late ? ('Terlambat '+Math.abs(dl)+' hari') : (dl===0 ? 'Jatuh tempo hari ini' : 'Kembalikan sebelum '+this.fmt(l.due)),
+        dueStyle:{fontSize:12,fontWeight:600,marginTop:5,color:late?'#B8433A':(soon?'#A0761E':'#414D8B')},
+        pillText:(late?'Telat · ':'Aktif · ')+l.code, pillStyle:this.pill(late?'late':'active'),
+        cardStyle:{background:late?'#FCF1EF':'#fff',border:'1px solid '+(late?'#F2DAD5':'#E9E7E0'),borderRadius:16,padding:12,marginBottom:12},
+        cardStyleD:{background:late?'#FCF1EF':'#fff',border:'1px solid '+(late?'#F2DAD5':'#E9E7E0'),borderRadius:16,padding:12},
+        renewDisabled:l.renewed, renewText:l.renewed?'Sudah diperpanjang':'Perpanjang',
+        renewStyle:this.btn('ghost',true,l.renewed,true), renew:()=>this.renew(l.code),
+        returnStyle:this.btn('primary',true,false,true), ret:()=>this.setState({sheet:'return',returnCode:l.code})};
+    });
+    const queueCards = S.reservations.map(r=>{ const b=this.book(r.bookId); return {key:r.bookId,title:b.title,author:b.author,coverStyle:this.cover(b.spine,46,64,8.5,7),pillStyle:this.pill('queue'),cancelStyle:this.btn('ghost',true,false,false),cancel:()=>{ this.setState({reservations:this.state.reservations.filter(x=>x.bookId!==r.bookId)}); this.toastMsg('Antrean dibatalkan'); }}; });
+    const historyCards = S.loans.filter(l=>l.status==='returned').map(l=>{ const b=this.book(l.bookId); const cs=this.cover(b.spine,46,64,8.5,7); cs.opacity=0.6; return {key:l.code,title:b.title,retText:'Dikembalikan '+this.fmt(l.returnedDate),coverStyle:cs,pillStyle:this.pill('done')}; });
+    const chips = this.cats.map(c=>{ const on = c===S.activeCat; return {key:c,label:c,click:()=>this.setState({activeCat:c}),style:{flex:'0 0 auto',border:'1px solid '+(on?'#EDEFF7':'#E9E7E0'),background:on?'#EDEFF7':'#fff',color:on?'#414D8B':'#6C7180',fontFamily:'inherit',fontSize:13,fontWeight:600,padding:'8px 14px',borderRadius:20,cursor:'pointer',whiteSpace:'nowrap'}}; });
+    const sorts = [['judul','Judul'],['penulis','Penulis'],['populer','Populer'],['rating','Rating']].map(p=>{ const on = S.catSort===p[0]; return {key:p[0],label:p[1],click:()=>this.setState({catSort:p[0]}),style:{border:'none',background:on?'#EDEFF7':'none',fontFamily:'inherit',fontSize:12,fontWeight:600,color:on?'#414D8B':'#6C7180',padding:'7px 10px',borderRadius:8,cursor:'pointer',whiteSpace:'nowrap'}}; });
+    const swA = this.sw(S.onlyAvail,false), swD = this.sw(S.notif.due,true), swV = this.sw(S.notif.avail,true), swB = this.sw(S.notif.baru,true);
+    const tabSt = on => ({flex:1,background:'none',border:'none',fontFamily:'inherit',cursor:'pointer',display:'flex',flexDirection:'column',alignItems:'center',gap:4,color:on?'#414D8B':'#9AA0AC',fontSize:10,fontWeight:600,paddingTop:6,position:'relative'});
+    const navSt = on => ({display:'flex',alignItems:'center',gap:12,padding:'11px 12px',borderRadius:10,border:'none',background:on?'#EDEFF7':'none',color:on?'#414D8B':'#5D6371',fontFamily:'inherit',fontSize:13.5,fontWeight:600,cursor:'pointer',width:'100%',textAlign:'left'});
+    const db = S.detailId ? this.book(S.detailId) : null;
+    let d = {dTitle:'',dAuthor:'',dCoverStyle:{},dStars:'',dRating:'',dRatings:'',dBadges:[],dDesc:'',dKv:[],dCtaText:'',dCtaStyle:{},dCtaDisabled:false,dCtaClick:()=>{}};
+    if (db){
+      const avail = db.copies > 0;
+      const mine = act.some(l=>l.bookId===db.id);
+      const reserved = S.reservations.some(r=>r.bookId===db.id);
+      const bb = {fontSize:11.5,fontWeight:600,padding:'6px 11px',borderRadius:9,background:'#fff',border:'1px solid #E9E7E0',color:'#6C7180'};
+      const badges = [{key:'cat',text:db.cat,style:bb}];
+      badges.push(avail?{key:'av',text:db.copies+' eksemplar tersedia',style:{...bb,background:'#E7F1EB',border:'1px solid #E7F1EB',color:'#2E7D5B'}}:{key:'av',text:'Sedang dipinjam',style:{...bb,background:'#F0F0F2',border:'1px solid #F0F0F2',color:'#98A0AC'}});
+      if (db.isNew) badges.push({key:'new',text:'Baru masuk',style:bb});
+      let ctaText, ctaKind = 'primary', ctaDisabled = false, ctaClick = ()=>{};
+      if (mine){ ctaText='Sedang kamu pinjam'; ctaKind='ghost'; ctaDisabled=true; }
+      else if (avail){ if (act.length >= LIM){ ctaText='Batas pinjam tercapai ('+LIM+'/'+LIM+')'; ctaDisabled=true; } else { ctaText='Pinjam buku ini'; ctaClick=()=>this.openConfirm(); } }
+      else if (reserved){ ctaText='Kamu sudah di antrean'; ctaKind='warn'; ctaDisabled=true; }
+      else { ctaText='Pesan (masuk antrean)'; ctaKind='warn'; ctaClick=()=>this.setState({sheet:'reserve'}); }
+      d = {dTitle:db.title,dAuthor:'oleh '+db.author,dCoverStyle:{...this.cover(db.spine,132,186,13.5,12),boxShadow:'inset -6px 0 0 rgba(0,0,0,.15), 0 16px 30px rgba(32,36,47,.2)'},dStars:this.stars(db.rating),dRating:db.rating.toFixed(1),dRatings:'('+db.ratings+' ulasan)',dBadges:badges,dDesc:db.desc,
+        dKv:[{k:'Penulis',v:db.author},{k:'Penerbit',v:db.publisher},{k:'Tahun terbit',v:String(db.year)},{k:'Jumlah halaman',v:db.pages+' hlm'},{k:'Bahasa',v:'Indonesia'},{k:'ISBN',v:db.isbn},{k:'Kategori',v:db.cat},{k:'Rak',v:db.shelf},{k:'Pengambilan',v:'Meja depan perpustakaan'}],
+        dCtaText:ctaText, dCtaStyle:this.btn(ctaKind,false,ctaDisabled), dCtaDisabled:ctaDisabled, dCtaClick:ctaClick};
+    }
+    const rl = S.returnCode ? this.loanByCode(S.returnCode) : null;
+    const rlb = rl ? this.book(rl.bookId) : null;
+    const sc = S.success;
+    const iconSt = warn => ({width:68,height:68,borderRadius:'50%',background:warn?'#F6EFDF':'#E7F1EB',color:warn?'#A0761E':'#2E7D5B',display:'flex',alignItems:'center',justifyContent:'center',marginBottom:18,flex:'0 0 auto',animation:'pop .4s cubic-bezier(.2,1.3,.4,1)'});
+    const toastBase = on => ({background:'#20242F',color:'#fff',borderRadius:14,padding:'13px 16px',fontSize:13,fontWeight:600,display:'flex',alignItems:'center',gap:10,boxShadow:'0 10px 26px rgba(0,0,0,.28)',opacity:on?1:0,transition:'opacity .22s, transform .22s',pointerEvents:'none',zIndex:60});
+    return {
+      isMobile: device !== 'Desktop', isDesktop: device === 'Desktop',
+      splash: S.splash, contentRef: this.contentRef, deskRef: this.deskRef,
+      memberName: name, firstName: name.split(' ')[0], avatarInitial: (name[0]||'A').toUpperCase(),
+      isHome: S.tab==='home', isKatalog: S.tab==='katalog', isLoans: S.tab==='loans', isProfil: S.tab==='profil',
+      goHome: ()=>this.showTab('home'), goKatalog: ()=>this.showTab('katalog'), goLoans: ()=>this.showTab('loans'), goProfil: ()=>this.showTab('profil'),
+      tabHomeStyle: tabSt(S.tab==='home'), tabKatalogStyle: tabSt(S.tab==='katalog'), tabLoansStyle: tabSt(S.tab==='loans'), tabProfilStyle: tabSt(S.tab==='profil'),
+      navHomeStyle: navSt(S.tab==='home'), navKatalogStyle: navSt(S.tab==='katalog'), navLoansStyle: navSt(S.tab==='loans'), navProfilStyle: navSt(S.tab==='profil'),
+      pageTitle: {home:'Beranda',katalog:'Katalog buku',loans:'Pinjaman saya',profil:'Profil'}[S.tab],
+      activeCount: act.length, limitNum: LIM, limitSub: 'Batas '+LIM+' buku per anggota',
+      hasOverdue: od.length > 0, overdueCount: od.length, overdueText: od.length+' buku terlambat — segera kembalikan.', showLoanBadge: od.length > 0,
+      homeQ: S.homeQ, onHomeQ: e=>this.setState({homeQ:e.target.value}),
+      catQ: S.catQ, onCatQ: e=>this.setState({catQ:e.target.value}),
+      hasLate: od.length > 0, lateLoans, hasNew: newBooks.length > 0, newBooks, popularBooks,
+      deskDiscover: [...newBooks, ...popularBooks.filter(p=>!newBooks.some(n=>n.key.startsWith(p.key.replace(/BARU$/,''))&&n.key!==p.key))].slice(0,6),
+      homeBooks, homeCntText: homeBooks.length+' buku', homeEmpty: homeBooks.length===0,
+      chips, sorts, availOn: S.onlyAvail, availTrack: swA.track, availThumb: swA.thumb, toggleAvail: ()=>this.setState({onlyAvail:!S.onlyAvail}),
+      catBooks: catList.map(rowVM), catEmpty: catList.length===0,
+      loansCntText: act.length+' dari '+LIM, loansEmpty: act.length===0 && S.reservations.length===0 && !S.loans.some(l=>l.status==='returned'),
+      activeLoanCards, hasQueue: queueCards.length>0, queueCards, hasHistory: historyCards.length>0, historyCards,
+      readingCount: act.length, doneCount: S.loans.filter(l=>l.status==='returned').length, queueCount: S.reservations.length,
+      swDueTrack: swD.track, swDueThumb: swD.thumb, toggleNotifDue: ()=>this.setState({notif:{...S.notif,due:!S.notif.due}}),
+      swAvailTrack: swV.track, swAvailThumb: swV.thumb, toggleNotifAvail: ()=>this.setState({notif:{...S.notif,avail:!S.notif.avail}}),
+      swBaruTrack: swB.track, swBaruThumb: swB.thumb, toggleNotifBaru: ()=>this.setState({notif:{...S.notif,baru:!S.notif.baru}}),
+      openSuggest: ()=>this.setState({sheet:'suggest'}),
+      onContact: ()=>this.toastMsg('Menghubungi petugas perpustakaan…'), onHours: ()=>this.toastMsg('Jam buka: Minggu 08.00–13.00'),
+      detailOpen: S.detailOpen, closeDetail: ()=>this.setState({detailOpen:false}), ...d,
+      anySheet: !!S.sheet, sheetConfirm: S.sheet==='confirm', sheetReserve: S.sheet==='reserve', sheetReturn: S.sheet==='return', sheetSuggest: S.sheet==='suggest',
+      closeSheet: ()=>this.setState({sheet:null}), closeSheetScrim: e=>{ if (e.target === e.currentTarget) this.setState({sheet:null}); },
+      cSub: db ? db.title+' — '+db.author : '',
+      cKv: [{k:'Pengambilan',v:'Meja depan'},{k:'Kembali sebelum',v:S.pendingDue?this.fmt(S.pendingDue):''},{k:'Slot pinjam',v:(act.length+1)+' dari '+LIM+' terpakai'}],
+      doBorrow: ()=>this.doBorrow(),
+      rSub: db ? db.title+' — '+db.author : '',
+      rKv: [{k:'Status',v:'Sedang dipinjam'},{k:'Posisi antrean',v:'#1 (berikutnya)'},{k:'Pemberitahuan',v:'Saat buku kembali'}],
+      doReserve: ()=>this.doReserve(),
+      retSub: rlb ? rlb.title+' — '+rlb.author : '', retCodeSpaced: rl ? this.spaced(rl.code) : '', retBarcode: rl ? this.barcode(rl.code) : null,
+      doReturn: ()=>this.doReturn(),
+      sgT: S.sg.t, sgA: S.sg.a, sgN: S.sg.n,
+      onSgT: e=>this.setState({sg:{...S.sg,t:e.target.value}}), onSgA: e=>this.setState({sg:{...S.sg,a:e.target.value}}), onSgN: e=>this.setState({sg:{...S.sg,n:e.target.value}}),
+      doSuggest: ()=>this.doSuggest(),
+      successOpen: S.successOpen && !!sc,
+      sIconStyle: iconSt(sc && sc.isWarn), sIconStyleD: {...iconSt(sc && sc.isWarn), margin:'0 auto 16px'},
+      sTitle: sc ? sc.title : '', sSub: sc ? sc.sub : '', sHasCode: !!(sc && sc.hasCode), sCodeLabel: sc ? (sc.codeLabel||'') : '',
+      sCodeSpaced: sc && sc.code ? this.spaced(sc.code) : '', sBarcode: sc && sc.code ? this.barcode(sc.code) : null,
+      sBookTitle: sc ? sc.bookTitle : '', sBookAuthor: sc ? sc.bookAuthor : '', sKv: sc ? sc.kv : [],
+      sHasHint: !!(sc && sc.hint), sHint: sc ? sc.hint : '',
+      sPrimaryText: sc ? sc.primaryText : '', sPrimaryStyle: this.btn('primary',false,false),
+      sPrimaryClick: ()=>{ this.setState({successOpen:false}); this.showTab(sc ? sc.primaryGo : 'home'); },
+      sHasSecondary: !!(sc && sc.hasSecondary), sSecondaryStyle: {...this.btn('ghost',false,false), marginTop:10},
+      sSecondaryClick: ()=>{ this.setState({successOpen:false}); this.showTab('home'); },
+      btnPrimary: this.btn('primary',false,false), btnWarn: this.btn('warn',false,false), btnGhostTop: {...this.btn('ghost',false,false), marginTop:10},
+      toastStyle: {...toastBase(S.toastOn), position:'absolute', left:20, right:20, bottom:100, transform:S.toastOn?'none':'translateY(12px)'},
+      toastStyleD: {...toastBase(S.toastOn), position:'absolute', left:'50%', bottom:28, minWidth:300, transform:S.toastOn?'translateX(-50%)':'translateX(-50%) translateY(12px)'},
+      toastMsg: S.toastMsg
+    };
+  }
+}
+</script>
+</body>
+</html>
